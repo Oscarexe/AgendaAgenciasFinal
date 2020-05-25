@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu May 21 11:38:01 CEST 2020:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0172-3698-c5f7-0000012bd650 
+Mon May 25 17:56:38 CEST 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0172-4c8c-d84b-00000134a020 
 on database directory C:\Users\oskar\Documents\NetBeansProjects\AgendaAgencias\BDAgendaAgencias with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30dae81 
 Loaded from file:/C:/Users/oskar/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Oracle Corporation
@@ -11,3 +11,6 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Mon May 25 17:56:45 CEST 2020:
+Shutting down instance a816c00e-0172-4c8c-d84b-00000134a020 on database directory C:\Users\oskar\Documents\NetBeansProjects\AgendaAgencias\BDAgendaAgencias with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30dae81 

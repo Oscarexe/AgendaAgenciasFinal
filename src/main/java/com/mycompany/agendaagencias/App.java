@@ -40,7 +40,7 @@ public class App extends Application {
         primaryController.setEntityManager(em);
         primaryController.cargarTodasAgencias();
         
-        // esto es un ejemplo para ver si sirve la conexion, pero a mi no me sirve el ejemplo
+        // esto es un ejemplo para ver si sirve la conexion
         Query queryAmbitos = em.createNamedQuery("Ambito.findAll");
         List<Ambito> listAmbitos= queryAmbitos.getResultList(); 
         for (Ambito ambito : listAmbitos){
@@ -53,14 +53,14 @@ public class App extends Application {
 
     }
 //metodo stop
-   /* @Override
+    @Override
     public void stop() throws Exception {
         em.close(); 
         try { 
             DriverManager.getConnection("jdbc:derby:BDAgendaAgencias;shutdown=true"); 
         } catch (SQLException ex) { 
         }        
-    }*/
+    }
     public static void main(String[] args) {
         launch();
     }
