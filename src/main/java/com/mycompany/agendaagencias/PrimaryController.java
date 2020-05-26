@@ -4,19 +4,21 @@ import com.mycompany.agendaagencias.entities.Agenciaspublicitarias;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+
 public class PrimaryController implements Initializable {
+    private Agenciaspublicitarias agenciaSeleccionada;
     //aqui se ponen las columnas con el fx:id que se le haya puesto en scene builder
      private EntityManager entityManager; 
     @FXML
@@ -33,7 +35,7 @@ public class PrimaryController implements Initializable {
     private TextField textFieldNombre;
     @FXML
     private TextField textFieldTelefono;
-
+    
     
      @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -53,6 +55,18 @@ public class PrimaryController implements Initializable {
         }
         return property;
         });*/
+       
+        tableView.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+            agenciaSeleccionada = newValue;
+            if (agenciaSeleccionada != null) {
+                textFieldNombre.setText(agenciaSeleccionada.getNombre());
+                textFieldTelefono.setText(agenciaSeleccionada.getTelefono());
+            } else {
+                textFieldNombre.setText("");
+                textFieldTelefono.setText("");
+            }
+        });
                 	
     } 
     
@@ -70,5 +84,20 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void onActionButtonGuardar(ActionEvent event) {
+        if (agenciaSeleccionada != null) {
+            agenciaSeleccionada.setNombre(textFieldNombre.getText());
+            agenciaSeleccionada.setTelefono(textFieldTelefono.getText());
+            entityManager.getTransaction().begin();
+            entityManager.merge(agenciaSeleccionada);
+            entityManager.getTransaction().commit();
+
+            int numFilaSeleccionada = tableView.getSelectionModel().getSelectedIndex();
+            tableView.getItems().set(numFilaSeleccionada, agenciaSeleccionada);
+            TablePosition pos = new TablePosition(tableView, numFilaSeleccionada, null);
+            tableView.getFocusModel().focus(pos);
+            tableView.requestFocus();
+        }
     }
+    
+    
 }
