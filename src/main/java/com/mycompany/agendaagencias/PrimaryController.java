@@ -4,6 +4,7 @@ import com.mycompany.agendaagencias.entities.Agenciaspublicitarias;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,7 +31,7 @@ public class PrimaryController implements Initializable {
     @FXML
     private TableColumn<Agenciaspublicitarias, String> columnaCorreo;
     @FXML
-    private TableColumn<?, ?> columnaAmbito;
+    private TableColumn<Agenciaspublicitarias, String> columnaAmbito;
     @FXML
     private TextField textFieldNombre;
     @FXML
@@ -46,15 +47,15 @@ public class PrimaryController implements Initializable {
         columnaAmbito.setCellValueFactory(new PropertyValueFactory<>("ambito"));
         
         // no se porque da error esto si es copiado y pegado
-       /* columnaAmbito.setCellValueFactory( 
+        columnaAmbito.setCellValueFactory( 
             cellData -> {
         SimpleStringProperty property = new SimpleStringProperty();
         if 
-            (cellData.getValue().getAMBITO() != null) {
-            property.setValue(cellData.getValue().getAMBITO().getAmbito());
+            (cellData.getValue().getAmbito() != null) {
+            property.setValue(cellData.getValue().getAmbito().getAmbito());
         }
         return property;
-        });*/
+        });
        
         tableView.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
@@ -97,6 +98,18 @@ public class PrimaryController implements Initializable {
             tableView.getFocusModel().focus(pos);
             tableView.requestFocus();
         }
+    }
+
+    @FXML
+    private void onActionButtonNuevo(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionButtonEditar(ActionEvent event) {
+    }
+
+    @FXML
+    private void onActionButtonSuprimir(ActionEvent event) {
     }
     
     
