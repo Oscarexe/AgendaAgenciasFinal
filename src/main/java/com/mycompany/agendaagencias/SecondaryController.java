@@ -5,13 +5,14 @@
  */
 package com.mycompany.agendaagencias;
 
-import com.mycompany.agendaagencias.entities.Ambito;
+import com.mycompany.agendaagencias.entities.Agenciaspublicitarias;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -57,9 +58,9 @@ public class SecondaryController implements Initializable {
 
  
     private TableView tableViewPrevio;
-    private Ambito ambito;
+    private Agenciaspublicitarias agencia;
     private EntityManager entityManager;
-    private boolean nuevoAmbito;
+    private boolean nuevaAgencia;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -73,7 +74,38 @@ public class SecondaryController implements Initializable {
        rootMain.getChildren().remove(rootDetalleView);      
   
        rootContactosView.setVisible(true);
-  
+       
+       //Almacenar o actualizar la base de datos
+       agencia.setNombre(textFieldNombre.getText());
+       agencia.setEmail(textFieldEmail.getText());
+       agencia.setIsbn(textFieldISBN.getText());
+       agencia.setTelefono(textFieldTelefono.getText());
+       agencia.setSoporte(textFieldSoporte.getText());
+       agencia.setProvincia(textFieldProvincia.getText());
+
+        if(nuevaAgencia) {
+            entityManager.persist(agencia);
+        } else {
+            entityManager.merge(agencia);
+        }
+        entityManager.getTransaction().commit();
+    
+        
+        //actualizar los nuevos datos en el TableView
+        int numFilaSeleccionada;
+        if(nuevaAgencia) {
+            tableViewPrevio.getItems().add(agencia);
+            numFilaSeleccionada = tableViewPrevio.getItems().size() - 1;
+            tableViewPrevio.getSelectionModel().select(numFilaSeleccionada);
+            tableViewPrevio.scrollTo(numFilaSeleccionada);
+        } else {
+            numFilaSeleccionada = tableViewPrevio.getSelectionModel().getSelectedIndex();
+            tableViewPrevio.getItems().set(numFilaSeleccionada, agencia);
+        }
+        TablePosition pos = new TablePosition(tableViewPrevio, numFilaSeleccionada, null);
+        tableViewPrevio.getFocusModel().focus(pos);
+        tableViewPrevio.requestFocus();
+        
     }
     
     
@@ -89,6 +121,15 @@ public class SecondaryController implements Initializable {
        rootMain.getChildren().remove(rootDetalleView);      
   
        rootContactosView.setVisible(true);
+       
+       //Cancelar transacción y realizar rollback
+       entityManager.getTransaction().rollback();
+
+       int numFilaSeleccionada = tableViewPrevio.getSelectionModel().getSelectedIndex();
+       TablePosition pos = new TablePosition(tableViewPrevio, numFilaSeleccionada, null);
+       tableViewPrevio.getFocusModel().focus(pos);
+       tableViewPrevio.requestFocus();
+       
     }
     
     
@@ -99,15 +140,27 @@ public class SecondaryController implements Initializable {
     }
     
     //iniciará la transacción con la base de datos en el momento en que se use este método
-    public void setPersona(EntityManager entityManager, Ambito ambito, boolean nuevoAmbito) {
+    public void setAgencia(EntityManager entityManager, Agenciaspublicitarias agencia, boolean nuevaAgencia) {
     this.entityManager = entityManager;
     entityManager.getTransaction().begin();
-    if(!nuevoAmbito) {
-        this.ambito = entityManager.find(Ambito.class, ambito.getId());
+    if(!nuevaAgencia) {
+        this.agencia = entityManager.find(Agenciaspublicitarias.class, agencia.getId());
     } else {
-        this.ambito = ambito;
+        this.agencia = agencia;
     }
-    this.nuevoAmbito = nuevoAmbito;
+    this.nuevaAgencia = nuevaAgencia;
     }
+    
+    //mostrarDatos
+    public void mostrarDatos() {
+        textFieldNombre.setText(agencia.getNombre());
+        textFieldProvincia.setText(agencia.getProvincia());
+        textFieldTelefono.setText(agencia.getTelefono());
+        textFieldEmail.setText(agencia.getEmail());
+        textFieldSoporte.setText(agencia.getSoporte());
+        textFieldISBN.setText(agencia.getIsbn());
+        // Falta implementar el código para el resto de controles
+    }
+    
     
 }

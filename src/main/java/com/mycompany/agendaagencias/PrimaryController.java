@@ -123,6 +123,13 @@ public class PrimaryController implements Initializable {
             
             //pasar los objetos correspondientes desde la vista al detalle.
             detalleViewController.setTableViewPrevio(tableView);
+            
+            //Pasar agencia y EntityManager
+            agenciaSeleccionada = new Agenciaspublicitarias();
+            detalleViewController.setAgencia(entityManager, agenciaSeleccionada, true);
+            
+            //método mostrarDatos
+            detalleViewController.mostrarDatos();
 
             // Añadir la vista de detalle al StackPane principal para que se muestre
             StackPane rootMain = (StackPane)rootContactosView.getScene().getRoot();
@@ -131,12 +138,12 @@ public class PrimaryController implements Initializable {
             Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    AmbitoSeleccionado = new Ambito();
-    detalleViewController.setPersona(entityManager, personaSeleccionada, true);
+
         
     }
 
     @FXML
+    
     private void onActionButtonEditar(ActionEvent event) {
         
 
@@ -154,6 +161,13 @@ public class PrimaryController implements Initializable {
             //pasar los objetos correspondientes desde la vista al detalle.
             detalleViewController.setTableViewPrevio(tableView);
 
+            //Pasar agencia y EntityManager
+            detalleViewController.setAgencia(entityManager, agenciaSeleccionada, false);
+        
+            //método mostrarDatos
+            detalleViewController.mostrarDatos();
+
+            
             // Añadir la vista de detalle al StackPane principal para que se muestre
             StackPane rootMain = (StackPane)rootContactosView.getScene().getRoot();
             rootMain.getChildren().add(rootDetalleView);
