@@ -5,13 +5,19 @@
  */
 package com.mycompany.agendaagencias;
 
+import com.mycompany.agendaagencias.entities.Ambito;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javax.persistence.EntityManager;
 
 /**
  * FXML Controller class
@@ -42,21 +48,66 @@ public class SecondaryController implements Initializable {
     private TextField textFieldAmbito;
     @FXML
     private CheckBox checkBoxCobro;
+    
+    
+    
+    private Pane  rootContactosView;
+    @FXML
+    private AnchorPane rootDetalleView;
 
-    /**
-     * Initializes the controller class.
-     */
+ 
+    private TableView tableViewPrevio;
+    private Ambito ambito;
+    private EntityManager entityManager;
+    private boolean nuevoAmbito;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
 
     @FXML
-    private void onActionButtonGuardar(ActionEvent event) {
+   private void onActionButtonGuardar(ActionEvent event) {
+       
+       //Volver a la vista del primary
+       StackPane rootMain = (StackPane)rootDetalleView.getScene().getRoot();
+       rootMain.getChildren().remove(rootDetalleView);      
+  
+       rootContactosView.setVisible(true);
+  
+    }
+    
+    
+     
+    public void setRootContactosView(Pane rootContactosView) {
+        this.rootContactosView = rootContactosView;
     }
 
     @FXML
     private void onActionButtonCancelar(ActionEvent event) {
+        //Volver a la vista del primary
+       StackPane rootMain = (StackPane)rootDetalleView.getScene().getRoot();
+       rootMain.getChildren().remove(rootDetalleView);      
+  
+       rootContactosView.setVisible(true);
+    }
+    
+    
+    //Para que cualquiera otra clase (en este caso la clase de la vista lista) 
+    //pueda asignar el TableView a esta clase de detalle
+    public void setTableViewPrevio(TableView tableViewPrevio) {
+    this.tableViewPrevio = tableViewPrevio;
+    }
+    
+    //iniciará la transacción con la base de datos en el momento en que se use este método
+    public void setPersona(EntityManager entityManager, Ambito ambito, boolean nuevoAmbito) {
+    this.entityManager = entityManager;
+    entityManager.getTransaction().begin();
+    if(!nuevoAmbito) {
+        this.ambito = entityManager.find(Ambito.class, ambito.getId());
+    } else {
+        this.ambito = ambito;
+    }
+    this.nuevoAmbito = nuevoAmbito;
     }
     
 }

@@ -3,7 +3,6 @@ package com.mycompany.agendaagencias;
 import com.mycompany.agendaagencias.entities.Ambito;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -11,6 +10,8 @@ import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -28,8 +29,13 @@ public class App extends Application {
     
     @Override   
     public void start(Stage stage) throws IOException {
+        StackPane rootMain = new StackPane();
+        
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("primary.fxml"));
-        Parent root = fxmlLoader.load();
+        Pane primary = fxmlLoader.load();
+        rootMain.getChildren().add(primary);
+        
+        scene = new Scene(rootMain, 640, 480);
         
          // conexion con la base de datos
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AgenciasPublicitariasPU"); // Comprobar nombre de la PU
@@ -47,7 +53,7 @@ public class App extends Application {
             System.out.println(ambito.getAmbito());
         }
         
-        scene = new Scene(root, 640, 480);
+        
         stage.setScene(scene);
         stage.show();
 

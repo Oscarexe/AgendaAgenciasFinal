@@ -1,19 +1,26 @@
 package com.mycompany.agendaagencias;
 
 import com.mycompany.agendaagencias.entities.Agenciaspublicitarias;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -36,6 +43,8 @@ public class PrimaryController implements Initializable {
     private TextField textFieldNombre;
     @FXML
     private TextField textFieldTelefono;
+    @FXML
+    private AnchorPane rootContactosView;
     
     
      @Override
@@ -102,10 +111,58 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void onActionButtonNuevo(ActionEvent event) {
+        try {
+            // Cargar la vista de detalle
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("secondary.fxml"));
+            Parent rootDetalleView = fxmlLoader.load();     
+
+            SecondaryController detalleViewController = (SecondaryController) fxmlLoader.getController(); 
+            detalleViewController.setRootContactosView(rootContactosView);
+            // Ocultar la vista de la lista
+            rootContactosView.setVisible(false);
+            
+            //pasar los objetos correspondientes desde la vista al detalle.
+            detalleViewController.setTableViewPrevio(tableView);
+
+            // Añadir la vista de detalle al StackPane principal para que se muestre
+            StackPane rootMain = (StackPane)rootContactosView.getScene().getRoot();
+            rootMain.getChildren().add(rootDetalleView);
+        } catch (IOException ex) { //tengo duda si la clase PrimaryController va ai
+            Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    AmbitoSeleccionado = new Ambito();
+    detalleViewController.setPersona(entityManager, personaSeleccionada, true);
+        
     }
 
     @FXML
     private void onActionButtonEditar(ActionEvent event) {
+        
+
+        
+        try {
+            // Cargar la vista de detalle
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("secondary.fxml"));
+            Parent rootDetalleView = fxmlLoader.load();     
+
+            SecondaryController detalleViewController = (SecondaryController) fxmlLoader.getController(); 
+            detalleViewController.setRootContactosView(rootContactosView);
+            // Ocultar la vista de la lista
+            rootContactosView.setVisible(false);
+            
+            //pasar los objetos correspondientes desde la vista al detalle.
+            detalleViewController.setTableViewPrevio(tableView);
+
+            // Añadir la vista de detalle al StackPane principal para que se muestre
+            StackPane rootMain = (StackPane)rootContactosView.getScene().getRoot();
+            rootMain.getChildren().add(rootDetalleView);
+        } catch (IOException ex) { //tengo duda si la clase PrimaryController va ai
+            Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+
     }
 
     @FXML
