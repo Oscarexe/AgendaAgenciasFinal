@@ -4,6 +4,7 @@ import com.mycompany.agendaagencias.entities.Agenciaspublicitarias;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +15,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -181,6 +185,32 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void onActionButtonSuprimir(ActionEvent event) {
+        
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar");
+        alert.setHeaderText("¿Desea suprimir el siguiente registro?");
+        alert.setContentText(agenciaSeleccionada.getNombre() + " Email:"
+                + agenciaSeleccionada.getEmail());
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            // Acciones a realizar si el usuario acepta
+            entityManager.getTransaction().begin();
+            agenciaSeleccionada = entityManager.merge(agenciaSeleccionada);
+            entityManager.remove(agenciaSeleccionada);
+            entityManager.getTransaction().commit();
+
+            tableView.getItems().remove(agenciaSeleccionada);
+
+            tableView.getFocusModel().focus(null);
+            tableView.requestFocus();
+        } else {
+            // Acciones a realizar si el usuario cancela
+            int numFilaSeleccionada = tableView.getSelectionModel().getSelectedIndex();
+            tableView.getItems().set(numFilaSeleccionada, agenciaSeleccionada);
+            TablePosition pos = new TablePosition(tableView, numFilaSeleccionada, null);
+            tableView.getFocusModel().focus(pos);
+            tableView.requestFocus();
+        }
     }
     
     
